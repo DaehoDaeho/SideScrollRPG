@@ -1,5 +1,7 @@
+using NUnit.Framework;
 using TMPro;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -9,6 +11,20 @@ public class PlayerMove : MonoBehaviour
     private int jumpCount = 0;
     public GameObject objText;
     public TextMeshProUGUI textMessage;
+    public AudioSource audioSource;
+
+    List<int> number = new List<int>();
+
+    private void Start()
+    {
+        // int 형 값을 저장할 수 있는 100개의 메모리 공간을 새로 할당하겠다.
+        for(int i=0; i<100; i++)
+        {
+            number.Add(i + 1);
+        }
+
+        int value = number[49];
+    }
 
     // Update is called once per frame
     void Update()
@@ -30,6 +46,7 @@ public class PlayerMove : MonoBehaviour
             rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
             isGrounded = false;
             ++jumpCount;
+            audioSource.Play();
         }
     }
 
@@ -49,6 +66,10 @@ public class PlayerMove : MonoBehaviour
                 textMessage.text = npc.message;
             }
             objText.SetActive(true);
+        }
+        else if(collision.gameObject.tag == "QuestObject")
+        {
+            QuestManager.Instance.CompleteQuest();
         }
     }
 
